@@ -8,7 +8,7 @@ Since we have a garden as in front-yard and back-yard devided by a hedge there w
 
 **Beginning**
 
-It al started with a zigbee relay switch and a normally-closed 12v electric bolt-lock. The zigbee relay switch I bought online and made in node-red for home-assistant a flow that when the mower left the dock ("leaving dock is on) for 120s then node-red send a signal to the switch trough zigbee to open the gate (it takes the mower just more then 120s to reach the gate from the docking station when leaving and following the guidewire). After it went trough the gate and started mowing a node-red flow would send a zigbee command to close the gate and the gate would lock.
+It al started with a zigbee relay switch and a normally-closed 12v electric bolt-lock. The zigbee relay switch I bought online and made in node-red for home-assistant a flow that when the mower left the dock ("leaving dock is on") for 120s then node-red send a signal to the switch trough zigbee to open the gate (it takes the mower just more then 120s to reach the gate from the docking station when leaving and following the guidewire). After it went trough the gate and started mowing "(leaving dock is off)" a node-red flow would send a zigbee command to close the gate and the gate would lock.
 
 
 **Problems**

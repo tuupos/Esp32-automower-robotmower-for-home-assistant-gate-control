@@ -19,3 +19,7 @@ The only problem is that if for some reason the connection to the Husqvarna clou
 **Solution**
 
 ESP32 connected to a low_voltage (3.3v) trigger relay.
+
+
+
+**_I am not a programmer, nor do I work in the IT business, I'm just a enthousiastic hobbiest and learn to alter code but I'm not good at writing code from scratch. Thanks to github and other resources (nowadays also AI) I can create what I need, Therefor doný shoot at my code. It can possibly be shorter or better but when it works, it works._**

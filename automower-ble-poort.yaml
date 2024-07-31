@@ -1,0 +1,98 @@
+esphome:
+  name: automower-ble-poort
+  friendly_name: Automower BLE poort
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+ota:
+  - platform: esphome
+    password: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# Optional manual IP
+  manual_ip:
+    static_ip: 192.168.132.3
+    gateway: 192.168.132.1
+    subnet: 255.255.255.0
+    dns1: 192.168.132.1
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Automower-Ble-Poort"
+    password: "XXXXXXXXXXXXXXXXXXXXXX"
+
+captive_portal:
+    
+esp32_ble_tracker:
+
+# sensor:
+#   - platform: ble_rssi
+#     mac_address: "AA:BB:CC:DD:EE:FF"  # Vervang dit door het MAC-adres van je BLE-apparaat
+#     name: "BLE Device RSSI"
+#     id: ble_device
+
+binary_sensor:
+  - platform: ble_presence
+    mac_address: "AA:BB:CC:DD:EE:FF"  # Vervang dit door het MAC-adres van je BLE-apparaat
+    name: "BLE Device"
+
+sensor:
+  - platform: ble_rssi
+    mac_address: "AA:BB:CC:DD:EE:FF"
+    name: "BLE Device RSSI"
+    id: ble_device_rssi
+    filters:
+      - throttle: 2s  # Pas dit aan naar de gewenste update-interval, bijvoorbeeld 60 seconden
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(ble_device_rssi).state > -50;'
+            then:
+              - delay: 2s
+              - if:
+                  condition:
+                    lambda: 'return id(ble_device_rssi).state > -50 && !id(relay).state;'
+                  then:
+                    - switch.turn_on: relay
+            else:
+              - delay: 2s
+              - if:
+                  condition:
+                    lambda: 'return id(ble_device_rssi).state <= -50;'
+                  then:
+                    - delay: 2s
+                    - if:
+                        condition:
+                          lambda: 'return id(ble_device_rssi).state <= -50 && id(relay).state;'
+                        then:
+                          - switch.turn_off: relay
+    # on_value:
+    #   then:
+    #     - if:
+    #         condition:
+    #           lambda: 'return id(ble_device_rssi).state < -70;'
+    #         then:
+    #           - switch.turn_on: relay
+    #         else:
+    #           - switch.turn_off: relay
+
+switch:
+  - platform: gpio
+    pin: GPIO23  # Vervang dit door de GPIO-pin die je wilt gebruiken
+    id: relay
+    name: "Relay"
